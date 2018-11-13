@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4eedbb89-b4f6-4469-9ab6-f642a1688cf7">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySQL"/>
+	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
+	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true"/>
+	<style name="Detail" mode="Transparent" fontName="Times New Roman"/>
+	<style name="Row" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#EEEFF0"/>
+		</conditionalStyle>
+	</style>
+	<style name="Table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#CACED0">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#D8D8D8"/>
+		</conditionalStyle>
+	</style>
+	<subDataset name="tableDataset" uuid="f13e6d36-5148-4ecc-bbe3-3035def80980">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
+	<parameter name="fechaInicio" class="java.sql.Date">
+		<parameterDescription><![CDATA[Fecha Inicio Reporte]]></parameterDescription>
+	</parameter>
+	<parameter name="fechaFin" class="java.sql.Date">
+		<parameterDescription><![CDATA[Fecha Fin reporte]]></parameterDescription>
+	</parameter>
+	<parameter name="logo" class="Object" isForPrompting="false">
+		<parameterDescription><![CDATA[The letterhead image]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT mrbs_room.room_name AS salon,
+	mrbs_entry.name AS materia_nombre,
+	mrbs_entry.description AS persona,
+	FROM_UNIXTIME( mrbs_entry.end_time) AS fecha
+FROM mrbs_room
+	JOIN mrbs_area ON 
+	 mrbs_area.id = mrbs_room.area_id 
+	JOIN mrbs_entry ON 
+	 mrbs_entry.room_id = mrbs_room.id 
+	LEFT JOIN mrbs_repeat ON 
+	 mrbs_entry.repeat_id = mrbs_repeat.id 
+WHERE 
+	 mrbs_area.area_name = "Video Conferencia"
+	 AND mrbs_entry.type = "I"
+	 AND DATE(FROM_UNIXTIME(mrbs_entry.start_time)) >= $P{fechaInicio}  
+	 AND DATE(FROM_UNIXTIME(mrbs_entry.start_time)) <= $P{fechaFin}
+ORDER BY `fecha` ASC]]>
+	</queryString>
+	<field name="salon" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="salon"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="mrbs_room"/>
+	</field>
+	<field name="materia_nombre" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="materia_nombre"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="mrbs_entry"/>
+	</field>
+	<field name="persona" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="persona"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="mrbs_entry"/>
+	</field>
+	<field name="fecha" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="fecha"/>
+	</field>
+	<group name="Gruppo1">
+		<groupExpression><![CDATA[$F{fecha}]]></groupExpression>
+		<groupHeader>
+			<band height="20"/>
+		</groupHeader>
+		<groupFooter>
+			<band>
+				<property name="local_mesure_unitheight" value="pixel"/>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</band>
+		</groupFooter>
+	</group>
+	<title>
+		<band height="171" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="80" width="556" height="1" uuid="806ce5df-1219-4876-ae0c-ca7405b1f246">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="415" y="10" width="50" height="20" uuid="0f86baff-6386-4f3f-b3fe-2388707babe8"/>
+				<box rightPadding="4"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="465" y="10" width="84" height="20" uuid="bb10dbe1-0a4f-4722-9953-c163b63cf979"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("MM/dd/yyyy").format(new java.util.Date())]]></textFieldExpression>
+			</textField>
+			<image hAlign="Center">
+				<reportElement x="0" y="2" width="65" height="60" uuid="94883631-a913-43e2-b182-ab8d77d0181e"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="95" y="0" width="210" height="25" uuid="e622555d-198b-4ccd-a4a1-c59c53304058">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="19" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EEMAC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="95" y="55" width="205" height="15" uuid="b8cc42fd-b569-497d-834d-7e854040ad18"/>
+				<text><![CDATA[www.eemac.edu.uy]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="95" y="25" width="205" height="15" uuid="c226e44d-3bb5-4145-b0b3-903bf1d79fde"/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="95" y="40" width="205" height="15" uuid="b96f7183-44f8-43ad-ba60-43d8fbf50b6e"/>
+				<text><![CDATA[Paysandú, 60000]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="90" width="556" height="40" uuid="4ae0883d-5a40-4880-974c-cb7bb0ac3b71"/>
+				<textElement textAlignment="Center">
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Informe de uso de videoconferencias]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="140" width="561" height="31" uuid="42266b4a-28fd-4587-8cc2-77416e9ec271"/>
+				<textElement textAlignment="Center">
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[Personas que no usaron las videoconferencias]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="25">
+			<staticText>
+				<reportElement style="Column header" positionType="Float" x="0" y="0" width="140" height="20" forecolor="#000000" uuid="20be1802-3c38-4c18-ac7b-70a3501aa9a7">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3814c050-caa5-4113-9aff-8dd8b6b3db00"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Salón]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" positionType="Float" x="140" y="0" width="165" height="20" forecolor="#000000" uuid="44011c50-13f7-48c9-b01f-e806b2d9e189">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a89f165c-d4fb-4fa5-b250-f3369f3d3adf"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Materia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" positionType="Float" x="305" y="0" width="157" height="20" forecolor="#000000" uuid="e071cb75-dfa5-440e-ae89-de6b0a568d16">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f924ca22-eaa6-446d-aab1-dbbf1911e86e"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Docente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" positionType="Float" x="462" y="2" width="90" height="18" forecolor="#000000" uuid="ccd6900a-75b0-4dc2-bd59-10ca1b0094e5">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f924ca22-eaa6-446d-aab1-dbbf1911e86e"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" positionType="Float" x="0" y="0" width="140" height="20" uuid="4360e5d1-bc0b-4f13-8f0b-dc18b240fae6">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3814c050-caa5-4113-9aff-8dd8b6b3db00"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{salon}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" positionType="Float" x="140" y="0" width="165" height="20" uuid="72aae37d-918a-4ec7-80ad-d8468115263b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a89f165c-d4fb-4fa5-b250-f3369f3d3adf"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{materia_nombre}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" positionType="Float" x="305" y="0" width="160" height="20" uuid="bebc26a0-9e67-44ad-99fe-f4b57306b167">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f924ca22-eaa6-446d-aab1-dbbf1911e86e"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{persona}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="465" y="0" width="75" height="20" forecolor="#000000" uuid="7704da8a-15f5-49a1-9c4c-5fa682bd4652"/>
+				<textElement>
+					<font fontName="Arial" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<lastPageFooter>
+		<band height="177"/>
+	</lastPageFooter>
+</jasperReport>
